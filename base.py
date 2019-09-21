@@ -9,7 +9,7 @@ localDICT = {}
 chirp = ChirpSDK()
 chirp.start(send=True,receive=True)
 
-identifier = 'RAHUll'
+identifier = '$123.456'
 payload = identifier.encode('utf8')
 chirp.send(payload, blocking=True)
 
@@ -21,7 +21,7 @@ class Callbacks(CallbackSet):
             localDICT["id"] = uuid4()
             localDICT["data"] = identifier
             with open('./data.json', 'w') as fp:
-            	json.dump(data, fp)
+            	json.dump(localDICT, fp)
         else:
             print('DECODE FAILED')
 
