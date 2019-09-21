@@ -9,10 +9,6 @@ localDICT = {}
 chirp = ChirpSDK()
 chirp.start(send=True,receive=True)
 
-identifier = '$123.456'
-payload = identifier.encode('utf8')
-chirp.send(payload, blocking=True)
-
 class Callbacks(CallbackSet):
 	def on_received(self, payload, channel):
 		print('hi')
@@ -26,6 +22,14 @@ class Callbacks(CallbackSet):
 		else:
 			print('DECODE FAILED')
 
-while True:
-	time.sleep(0.1)
-	chirp.set_callbacks(Callbacks())
+def receive():
+	while True:
+		time.sleep(0.1)
+		chirp.set_callbacks(Callbacks())
+
+def send(message):
+	identifier = '$123.456'
+	payload = identifier.encode('utf8')
+	chirp.send(payload, blocking=True)
+
+send()
