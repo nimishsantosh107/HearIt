@@ -20,10 +20,14 @@ setInterval(()=>{
 	fs.readFile("./data.json", 'utf-8', (err,data)=>{
 		if(err) {console.log(err);}
 		else {
-			var localOBJ = JSON.parse(data);
-			if(curID !== localOBJ.id){
-				console.log(localOBJ);
-				curID = localOBJ.id;
+			try {
+				var localOBJ = JSON.parse(data);
+				if(curID !== localOBJ.id){
+					console.log(localOBJ);
+					curID = localOBJ.id;
+				}
+			} catch(e) {
+				//IGNORE e
 			}
 		}
 	});
