@@ -34,8 +34,8 @@ def send(message):
 def fileChange():
 	while(runStatus):
 		time.sleep(0.1)
-		f=open("./transmit.json", "r")
 		try:
+			f=open("./transmit.json", "r")
 			content = f.read()
 			f.close()
 			if (content == ""):
