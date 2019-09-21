@@ -5,6 +5,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid/v4');
+const cors = require('cors');
 
 //CONFIG VARIABLES
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const IP4 = "10.20.10.18";
 const ServerIP = "10.20.10.227";
 
 var app = express();
+app.use(cors());
 var httpServer = http.Server(app);
 
 //INIT
@@ -22,7 +24,7 @@ var STATION_NAME = "A";
 var dataArr = [];
 
 //SOCKET ROUTES
-var iocc = socketIOC(`http://${ServerIP}:3000`);
+var iocc = socketIOC(`http://${ServerIP}:3300`);
 iocc.on('connect',()=>{
 	console.log('CONNECTED TO MAIN');
 

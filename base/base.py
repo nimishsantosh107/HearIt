@@ -49,6 +49,7 @@ def fileChange():
 			else:
 				contentDICT = json.loads(content)
 				print(contentDICT)
+				#SENDING TO DEVICES
 				send(contentDICT["data"])
 				f=open("transmit.json", "w")
 				f.write("")
@@ -81,7 +82,7 @@ if __name__ == '__main__':
 	fileChangeDaemon.setDaemon(True)
 	fileChangeDaemon.start()
 
-	send('$123.456')
+	#send('$123.456')
 
 	#QUIT PROGRAM
 	signal.signal(signal.SIGINT, signal_handler)
