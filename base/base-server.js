@@ -1,3 +1,8 @@
+/*
+data.json - chirp - data TO MAIN
+transmit.json - data incoming - data FROM MAIN
+*/
+
 const express = require('express');
 const socketIO = require('socket.io');
 const socketIOC = require('socket.io-client');
@@ -8,9 +13,9 @@ const uuid = require('uuid/v4');
 const cors = require('cors');
 
 //CONFIG VARIABLES
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const IP4 = "10.20.10.18";
-const ServerIP = "10.20.10.227";
+const ServerIP_PORT = "10.20.10.18:3300";
 
 var app = express();
 app.use(cors());
@@ -24,7 +29,7 @@ var STATION_NAME = "A";
 var dataArr = [];
 
 //SOCKET ROUTES
-var iocc = socketIOC(`http://${ServerIP}:3300`);
+var iocc = socketIOC(`http://${ServerIP_PORT}`);
 iocc.on('connect',()=>{
 	console.log('CONNECTED TO MAIN');
 
@@ -32,14 +37,14 @@ iocc.on('connect',()=>{
 	iocc.emit('baseStationReport',{station: STATION_NAME});
 
 	//RECV DATA
-	iocc.on('newBaseStation', (data)=>{
+iocc.on('newBaseStation', (data)=>{
 		if(data.station !== STATION_NAME){
 			console.log('NEW ',data);
 			basestations.push(data.station);			
 		}
 	});
 
-	//INCOMING DATA FROM BASE STATION
+	//INCOMING DATA FROM MAIN STATION
 	iocc.on('dataIncoming', (data)=>{
 		if(data.station === STATION_NAME)
 			return;

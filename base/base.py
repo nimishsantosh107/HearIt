@@ -1,3 +1,18 @@
+'''
+data.json:
+{
+	id
+	data station
+		 data
+}
+
+transmit.json:
+{
+	station
+	data
+}
+'''
+
 from chirpsdk import ChirpSDK, CallbackSet
 from uuid import uuid4
 import time
@@ -22,7 +37,7 @@ class Callbacks(CallbackSet):
 				json.dump(localDICT, fp)
 				fp.close()	
 		else:
-			print('DECODE FAILED')
+			print('RECV: DECODE FAILED')
 
 #RECEIVING LISTENER
 def receive():
@@ -82,7 +97,7 @@ if __name__ == '__main__':
 	fileChangeDaemon.setDaemon(True)
 	fileChangeDaemon.start()
 
-	#send('$123.456')
+	send('$123.456')
 
 	#QUIT PROGRAM
 	signal.signal(signal.SIGINT, signal_handler)
