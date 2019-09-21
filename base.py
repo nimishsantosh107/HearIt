@@ -1,9 +1,15 @@
 from chirpsdk import ChirpSDK, CallbackSet
+from uuid import uuid4
+import time
+import json
+
+#LOCAL DATA
+localDICT = {}
 
 chirp = ChirpSDK()
-chirp.start(send=True, receive=True)
+chirp.start(send=True,receive=True)
 
-identifier = 'hello'
+identifier = 'RAHUll'
 payload = identifier.encode('utf8')
 chirp.send(payload, blocking=True)
 
@@ -11,8 +17,14 @@ class Callbacks(CallbackSet):
     def on_received(self, payload, channel):
         if payload is not None:
             identifier = payload.decode('utf-8')
-            print('Received: ' + identifier)
+            print('RECV: ' + identifier)
+            localDICT["id"] = uuid4()
+            localDICT["data"] = identifier
+            with open('./data.json', 'w') as fp:
+    			json.dump(data, fp)
         else:
-            print('Decode failed')
+            print('DECODE FAILED')
 
-chirp.set_callbacks(Callbacks())
+while True:
+	time.sleep(0.1)
+	chirp.set_callbacks(Callbacks())
