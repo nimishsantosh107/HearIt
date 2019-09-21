@@ -6,6 +6,9 @@ import json
 import signal
 import sys
 
+#INIT
+STATION_NAME = "A"
+
 class Callbacks(CallbackSet):
 	def on_received(self, payload, channel):
 		if (payload is not None):
@@ -13,8 +16,11 @@ class Callbacks(CallbackSet):
 			print('RECV: ' + identifier)
 			localDICT["id"] = str(uuid4())
 			localDICT["data"] = {}
-			with open('./data.json', 'w') as fp:
+			localDICT["data"]["station"] = STATION_NAME
+			localDICT["data"]["data"] = identifier
+			with open("data.json", "w") as fp:
 				json.dump(localDICT, fp)
+				fp.close()	
 		else:
 			print('DECODE FAILED')
 
@@ -35,7 +41,7 @@ def fileChange():
 	while(runStatus):
 		time.sleep(0.1)
 		try:
-			f=open("./transmit.json", "r")
+			f=open("transmit.json", "r")
 			content = f.read()
 			f.close()
 			if (content == ""):
@@ -43,8 +49,8 @@ def fileChange():
 			else:
 				contentDICT = json.loads(content)
 				print(contentDICT)
-				#SEND CHIRP
-				f=open("./transmit.json", "w")
+				send(contentDICT["data"])
+				f=open("transmit.json", "w")
 				f.write("")
 				f.close()
 		except:
