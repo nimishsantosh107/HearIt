@@ -8,40 +8,63 @@ const uuid = require('uuid/v4');
 
 //CONFIG VARIABLES
 const PORT = process.env.PORT || 3000;
-const IP4 = "192.168.1.100";
-const ServerIP = "192.168.1.11";
+const IP4 = "10.20.10.18";
+const ServerIP = "10.20.10.227";
 
 var app = express();
 var httpServer = http.Server(app);
+
+//INIT
+var basestations = [];
+var STATION_NAME = "A";
 
 //SOCKET ROUTES
 var iocc = socketIOC(`http://${ServerIP}:3000`);
 iocc.on('connect',()=>{
 	console.log('CONNECTED TO MAIN');
 
-	//RECV DATA MAYBE
-});
+	//JOIN ROOM
+	iocc.emit('baseStationReport',{name: STATION_NAME});
 
-//CHECKING CHANGES IN LOCAL FILE
-var curID = "";
-setInterval(()=>{
-	fs.readFile("./data.json", 'utf-8', (err,data)=>{
-		if(err) {console.log(err);}
-		else {
-			try {
-				var localOBJ = JSON.parse(data);
-				if(curID !== localOBJ.id){
-					console.log(localOBJ);
-					curID = localOBJ.id;
-
-					//EMIT DATA TO MAIN SERVER
-					iocc.emit('update', localOBJ)
-				}
-			} catch(e) { /*IGNORE e*/ }
+	//RECV DATA
+	iocc.on('newBaseStation', (data)=>{
+		if(data.name !== STATION_NAME){
+			console.log('NEW ',data);
+			basestations.push(data.name);			
 		}
 	});
-}, 1000);
+
+	iocc.on('dataIncoming', (data)=>{
+		console.log(data);
+
+		if(data.transmit){
+			var transmitOBJ = {
+				id: new uuid(),
+				data: data.transmit,
+			}
+		}
+		else if(data.name){
+			console.log('GOT INFO');
+		}
+	});
+
+	iocc.on('leaveBaseStation', (data)=>{
+		basestations = basestations.filter(x=>x !== data.name);
+	});
+});
+
+//DETECT FILE CHANGE
+fs.watchFile("./data.json",(curr,prev)=>{
+	try {
+		fs.readFile("./data.json", 'utf-8', (err,data)=>{
+			var localOBJ = JSON.parse(data);
+			console.log(localOBJ);
+			//EMIT DATA TO MAIN SERVER
+			iocc.emit('chirp', localOBJ)
+		});
+	} catch(e) { /*IGNORE e*/ }
+});
 
 
 //SERVER UP
-httpServer.listen(PORT, ()=>{console.log(`HTTP BASE-SERVER UP ON PORT: ${PORT}`);});
+httpServer.listen(PORT, IP4, ()=>{console.log(`HTTP BASE-SERVER UP ON PORT: ${PORT}`);});

@@ -30,6 +30,8 @@ def send(message):
 	payload = identifier.encode('utf8')
 	chirp.send(payload, blocking=True)
 
+#DETECT FILE CHANGE
+
 #HANDLE QUIT
 def signal_handler(signal, frame):
 	print("EXITING")
@@ -48,6 +50,8 @@ if __name__ == '__main__':
 	recvDaemon = threading.Thread(name='RECV DAEMON', target=receive)
 	recvDaemon.setDaemon(True)
 	recvDaemon.start()
+
+	#FILE CHANGE DAEMON
 
 	send('$123.456')
 
