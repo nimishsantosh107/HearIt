@@ -18,7 +18,7 @@ class Callbacks(CallbackSet):
         if payload is not None:
             identifier = payload.decode('utf-8')
             print('RECV: ' + identifier)
-            localDICT["id"] = uuid4()
+            localDICT["id"] = str(uuid4())
             localDICT["data"] = identifier
             with open('./data.json', 'w') as fp:
             	json.dump(localDICT, fp)
