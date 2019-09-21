@@ -21,7 +21,7 @@ class Callbacks(CallbackSet):
             localDICT["id"] = uuid4()
             localDICT["data"] = identifier
             with open('./data.json', 'w') as fp:
-    			json.dump(data, fp)
+            	json.dump(data, fp)
         else:
             print('DECODE FAILED')
 
