@@ -34,18 +34,16 @@ iocc.on('connect',()=>{
 		}
 	});
 
+	//INCOMING DATA FROM BASE STATION
 	iocc.on('dataIncoming', (data)=>{
 		console.log(data);
 
-		if(data.transmit){
-			var transmitOBJ = {
-				id: new uuid(),
-				data: data.transmit,
-			}
+		var transmitOBJ = {
+			id: new uuid(),
+			data: data,
 		}
-		else if(data.name){
-			console.log('GOT INFO');
-		}
+		var transmitJSON = JSON.stringify(transmitOBJ);
+		fs.writeFile('./transmit.json', transmitJSON, 'utf8', (err)=>{console.log('ERR');});
 	});
 
 	iocc.on('leaveBaseStation', (data)=>{
@@ -60,7 +58,7 @@ fs.watchFile("./data.json",(curr,prev)=>{
 			var localOBJ = JSON.parse(data);
 			console.log(localOBJ);
 			//EMIT DATA TO MAIN SERVER
-			iocc.emit('chirp', localOBJ)
+			// iocc.emit('chirp', localOBJ.data)
 		});
 	} catch(e) { /*IGNORE e*/ }
 });

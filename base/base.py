@@ -12,7 +12,7 @@ class Callbacks(CallbackSet):
 			identifier = payload.decode('utf-8')
 			print('RECV: ' + identifier)
 			localDICT["id"] = str(uuid4())
-			localDICT["data"] = identifier
+			localDICT["data"] = {}
 			with open('./data.json', 'w') as fp:
 				json.dump(localDICT, fp)
 		else:
@@ -31,6 +31,25 @@ def send(message):
 	chirp.send(payload, blocking=True)
 
 #DETECT FILE CHANGE
+def fileChange():
+	while(runStatus):
+		time.sleep(0.1)
+		f=open("./transmit.json", "r")
+		try:
+			content = f.read()
+			f.close()
+			if (content == ""):
+				continue
+			else:
+				contentDICT = json.loads(content)
+				print(contentDICT)
+				#SEND CHIRP
+				f=open("./transmit.json", "w")
+				f.write("")
+				f.close()
+		except:
+			continue
+
 
 #HANDLE QUIT
 def signal_handler(signal, frame):
@@ -52,9 +71,13 @@ if __name__ == '__main__':
 	recvDaemon.start()
 
 	#FILE CHANGE DAEMON
+	fileChangeDaemon = threading.Thread(name='FILE DAEMON', target=fileChange)
+	fileChangeDaemon.setDaemon(True)
+	fileChangeDaemon.start()
 
 	send('$123.456')
 
 	#QUIT PROGRAM
 	signal.signal(signal.SIGINT, signal_handler)
+	fileChangeDaemon.join()
 	recvDaemon.join()
