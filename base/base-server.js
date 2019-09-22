@@ -37,10 +37,10 @@ iocc.on('connect',()=>{
 	iocc.emit('baseStationReport',{station: STATION_NAME});
 
 	//RECV DATA
-iocc.on('newBaseStation', (data)=>{
+	iocc.on('newBaseStation', (data)=>{
 		if(data.station !== STATION_NAME){
 			console.log('NEW ',data);
-			basestations.push(data.station);			
+			basestations.push(data);			
 		}
 	});
 
@@ -52,7 +52,7 @@ iocc.on('newBaseStation', (data)=>{
 		console.log('INCOMING',data);
 		var transmitOBJ = data;
 		var transmitJSON = JSON.stringify(transmitOBJ);
-		fs.writeFile('transmit.json', transmitJSON, 'utf8', (err)=>{console.log('ERR');});
+		fs.writeFile('transmit.json', transmitJSON, 'utf8', (err)=>{/*console.log('ERR');*/});
 	});
 
 	iocc.on('leaveBaseStation', (data)=>{
