@@ -52,7 +52,7 @@ iocc.on('connect',()=>{
 		console.log('INCOMING',data);
 		var transmitOBJ = data;
 		var transmitJSON = JSON.stringify(transmitOBJ);
-		fs.writeFile('transmit.json', transmitJSON, 'utf8', (err)=>{/*console.log('ERR');*/});
+		fs.writeFile('transmit.json', transmitJSON, 'utf8', (err)=>{/* console.log('ERR');*/});
 	});
 
 	iocc.on('leaveBaseStation', (data)=>{

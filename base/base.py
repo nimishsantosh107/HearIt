@@ -97,8 +97,6 @@ if __name__ == '__main__':
 	fileChangeDaemon.setDaemon(True)
 	fileChangeDaemon.start()
 
-	send('$123.456')
-
 	#QUIT PROGRAM
 	signal.signal(signal.SIGINT, signal_handler)
 	fileChangeDaemon.join()
